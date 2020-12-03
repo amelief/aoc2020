@@ -17,15 +17,11 @@ PARTS.times do |i|
   loop_numbers do |num|
     loop_numbers do |num2|
       if i == 0 # part 1
-        if num + num2 == TARGET
-          puts sprintf(OUTPUT, "#{num} + #{num2}", (num * num2))
-          break
-        end
+        puts sprintf(OUTPUT, "#{num} + #{num2}", (num * num2)) if num + num2 == TARGET
       elsif i == 1 # part 2
         loop_numbers do |num3|
           if num + num2 + num3 == TARGET
             puts sprintf(OUTPUT, "#{num} + #{num2} + #{num3}", (num * num2 * num3))
-            break
           end
         end
       end

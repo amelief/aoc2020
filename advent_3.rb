@@ -1,11 +1,11 @@
 #!/usr/bin/ruby
 
-map = File.read('input/3_input.txt').split("\n").map(&:strip)
+MAP = File.read('input/3_input.txt').split("\n").map(&:strip)
 
-tree = '#'
-not_tree = '.'
+TREE = '#'
+NOT_TREE = '.'
 
-draw_map = false # set to true to output map
+DRAW_MAP = false # set to true to output map
 
 num_trees_multiplied = 1
 
@@ -20,10 +20,10 @@ parts = [
 parts.each_with_index do |part, slope_no|
   char_point = 0
 
-  map.each_with_index do |line, line_no|
+  MAP.each_with_index do |line, line_no|
 
     unless line_no % part[:down] == 0
-      puts line if draw_map
+      puts line if DRAW_MAP
       next
     end
 
@@ -36,16 +36,16 @@ parts.each_with_index do |part, slope_no|
 
     draw_line = line.dup # use dup or result gets cached
 
-    if line[char_point] == tree
+    if line[char_point] == TREE
       part[:num_trees] += 1 
-      draw_line[char_point] = 'X' if draw_map
-    elsif line[char_point] == not_tree
-      draw_line[char_point] = 'O' if draw_map
+      draw_line[char_point] = 'X' if DRAW_MAP
+    elsif line[char_point] == NOT_TREE
+      draw_line[char_point] = 'O' if DRAW_MAP
     else
       puts "! Unexpected character #{line[char_point]}"
     end
 
-    puts draw_line if draw_map
+    puts draw_line if DRAW_MAP
 
     char_point += part[:right]
   end

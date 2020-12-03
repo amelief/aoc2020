@@ -1,10 +1,10 @@
 #!/usr/bin/ruby
 
-pws = File.read('input/2_input.txt').split("\n").map(&:strip)
+PWS = File.read('input/2_input.txt').split("\n").map(&:strip)
 
 output = { part1: { valid: 0, invalid: 0 }, part2: { valid: 0, invalid: 0 }}
 
-pws.each do |p|
+PWS.each do |p|
   policy, password = p.split(': ').map(&:strip)
   count, letters = policy.split(' ')
   num1, num2 = count.split('-').map(&:to_i)
