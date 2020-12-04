@@ -14,6 +14,8 @@ VALIDATION = {
 
 OUTPUT = "Valid: %d, invalid: %d"
 
+VALIDATE_DATA = true # set to false for part 1
+
 valid = 0
 invalid = 0
 
@@ -23,6 +25,8 @@ def validate_required_fields?(data)
   VALIDATION.each do |key, regex|
 
     if data.include?(key.to_s)
+      next unless VALIDATE_DATA
+      
       data_item = data.split(' ')
 
       data_item.each do |item|
