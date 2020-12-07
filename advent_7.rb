@@ -27,29 +27,7 @@ def contains_gold_bag(rules, colour)
   return count
 end
 
-def how_many_bags(rules, colour)
-  count = 0
-
-  regex = /#{colour} bags contain (.*)/
-
-  contains_bags = 0
-
-  rules.each do |rule|
-    m = regex.match(rule)
-    next unless m
-
-    other_bags = m[1].split(',').map(&:strip)
-    contains_bags = other_bags.size
-    other_bags.each do |bag|
-      if /no other bags/.match(bag)
-        contains_bags = 0
-      else
-        new_colour = /([a-z]+ [a-z]+) bags?/.match(bag)
-        new_colour = new_colour[1]
-        num = /\d+/.match(bag)[0].to_i
-      end
-    end
-  end
+def how_many_bags(colour)
   return $bag_hash[colour.to_sym]
 end
 
@@ -110,5 +88,5 @@ end
 
   colour = YOUR_BAG
   how_many_hash(F, colour)
-  puts how_many_bags(F, colour)
+  puts how_many_bags(colour)
 puts $bag_hash.inspect
