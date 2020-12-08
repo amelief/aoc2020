@@ -16,10 +16,10 @@ def modify_and_run_program(changed_instruction)
       raise "Could not find #{changed_instruction[:from]} on line #{changed_instruction[:line]}"
     end
   end
-  run_program(file, changed_instruction)
+  run_program(file)
 end
 
-def run_program(file = F, changed_instruction = {})
+def run_program(file = F)
   processed = []
   current_instruction = 0
   acc = 0
