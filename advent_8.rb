@@ -21,8 +21,7 @@ def run_program(changed_instruction = {})
   end
 
   while current_instruction < TOTAL_LINES do
-    complete_instruction = file[current_instruction]
-    instruction, num = complete_instruction.split(' ').map(&:strip)
+    instruction, num = file[current_instruction].split(' ').map(&:strip)
     num = num.to_i
 
     raise "Loop detected: acc value was #{acc}" if processed.include?(current_instruction)
@@ -35,10 +34,8 @@ def run_program(changed_instruction = {})
       current_instruction += 1
     when 'jmp'
       current_instruction += num
-    when 'nop'
-      current_instruction += 1
     else
-      raise ArgumentError, "Unknown instruction #{instruction}"
+      current_instruction += 1
     end
   end
   puts "Program ran. Acc: #{acc}"
@@ -47,7 +44,7 @@ end
 def does_program_complete?(changed_instruction)
   begin
     run_program(changed_instruction)
-  rescue RuntimeError => e
+  rescue RuntimeError
     return false
   end
   true
@@ -58,7 +55,7 @@ end
     begin
       run_program
     rescue => e
-      puts "Part #{part}: #{e}"
+      puts "Part #{part}: #{e.message}"
     end
   else
     print "Part #{part}: " # don't want a new line
@@ -67,8 +64,12 @@ end
       instruction = line[0..2]
       next unless FAULTY_INSTRUCTIONS.include?(instruction)
 
-      changed_instruction = { line: i, from: line }
-      changed_instruction[:to] = line.gsub(/#{instruction}/, instruction == 'jmp' ? 'nop' : 'jmp')
+      changed_instruction = { 
+        line: i, 
+        from: line,
+        to: line.gsub(/#{instruction}/, instruction == 'jmp' ? 'nop' : 'jmp')
+      }
+
       if does_program_complete?(changed_instruction)
         puts "Program runs when changing #{changed_instruction.inspect}" if DEBUG
         return
