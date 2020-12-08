@@ -5,17 +5,10 @@ TOTAL_LINES = F.size
 FAULTY_INSTRUCTIONS = %w(jmp nop)
 DEBUG = false
 
-
 def modify_and_run_program(changed_instruction)
   file = F.dup
+  file[changed_instruction[:line]] = changed_instruction[:to]
 
-  if changed_instruction.any?
-    if file[changed_instruction[:line]] == changed_instruction[:from]
-      file[changed_instruction[:line]] = changed_instruction[:to]
-    else
-      raise "Could not find #{changed_instruction[:from]} on line #{changed_instruction[:line]}"
-    end
-  end
   run_program(file)
 end
 
