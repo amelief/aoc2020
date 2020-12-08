@@ -5,11 +5,8 @@ TOTAL_LINES = F.size
 FAULTY_INSTRUCTIONS = %w(jmp nop)
 DEBUG = false
 
-def run_program(changed_instruction = {})
-  processed = []
-  current_instruction = 0
-  acc = 0
 
+def modify_and_run_program(changed_instruction)
   file = F.dup
 
   if changed_instruction.any?
@@ -19,6 +16,13 @@ def run_program(changed_instruction = {})
       raise "Could not find #{changed_instruction[:from]} on line #{changed_instruction[:line]}"
     end
   end
+  run_program(file, changed_instruction)
+end
+
+def run_program(file = F, changed_instruction = {})
+  processed = []
+  current_instruction = 0
+  acc = 0
 
   while current_instruction < TOTAL_LINES do
     instruction, num = file[current_instruction].split(' ').map(&:strip)
@@ -41,9 +45,9 @@ def run_program(changed_instruction = {})
   puts "Program ran. Acc: #{acc}"
 end
 
-def does_program_complete?(changed_instruction)
+def program_completes?(changed_instruction)
   begin
-    run_program(changed_instruction)
+    modify_and_run_program(changed_instruction)
   rescue RuntimeError
     return false
   end
@@ -70,7 +74,7 @@ end
         to: line.gsub(/#{instruction}/, instruction == 'jmp' ? 'nop' : 'jmp')
       }
 
-      if does_program_complete?(changed_instruction)
+      if program_completes?(changed_instruction)
         puts "Program runs when changing #{changed_instruction.inspect}" if DEBUG
         return
       end
