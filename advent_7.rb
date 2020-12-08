@@ -3,6 +3,7 @@
 F = File.read('input/7_input.txt').split("\n").map(&:strip)
 
 YOUR_BAG = 'shiny gold'
+NO_OTHER_BAGS = /no other bags/
 
 $bag_hash = {}
 $processed = []
@@ -28,10 +29,6 @@ def contains_gold_bag(rules, colour)
   return count
 end
 
-def how_many_bags(colour)
-  return $bag_hash[colour.to_sym]
-end
-
 def find_rule(colour)
   F.each do |rule|
     regex = /#{colour} bags contain (.*)/
@@ -40,51 +37,62 @@ def find_rule(colour)
   end
 end
 
-def how_many_hash(rules, colour)
-  puts "-- RECURSING, I want #{colour}"
-  return $bag_hash[colour.to_sym] if $bag_hash[colour.to_sym]
-  in_this_bag = 0
-  regex = /#{colour} bags contain (.*)/
 
-  contains_bags = 0
+$rec = 0
+
+def how_many_hash(colour)
+  $rec += 1
+  puts "-- RECURSING, looking at: #{colour}"
+  
+  in_this_bag = bag_value(colour, data = 0) || 0
 
   rule = find_rule(colour)
   raise "Rule not found for #{colour}" unless rule
 
   puts rule[0]
 
-  other_bags = rule[1].split(',').map(&:strip)
-  contains_bags = 0
+  other_bags = rule[1]
+  if other_bags.match(NO_OTHER_BAGS)
+    puts ' -- no bags here'
+    in_this_bag = 1
+  else
+    other_bags = other_bags.split(',').map(&:strip)
+    contains_bags = 0
+    puts "&& #{other_bags.inspect}"
 
-  other_bags.each do |bag|
-    if /no other bags/.match(bag)
-      in_this_bag += 1
-      contains_bags = 0
-    else
+    other_bags.each do |bag|
+      puts " - sub_bag: #{bag}"
       new_colour = /([a-z]+ [a-z]+) bags?/.match(bag)
       new_colour = new_colour[1]
+      next if new_colour == colour
       num = /\d+/.match(bag)[0].to_i
       
-      num_of_bags = $bag_hash[new_colour.to_sym] || how_many_hash(F, new_colour)
-      puts "> #{num} of #{new_colour} (contains #{num_of_bags})"
+      num_of_bags = bag_value(new_colour) || how_many_hash(new_colour)
 
       contains_bags = num unless find_rule(new_colour)[0].match(/no other bags/)
-      puts "contains bags: #{contains_bags}"
+      puts "> #{num} of #{new_colour} (contains #{num_of_bags})"
+      puts ">> #{contains_bags} + #{num}(#{num_of_bags})"
 
       num_of_bags = (num * num_of_bags) + contains_bags
-      puts "num_of_bags: #{num_of_bags}"
+      puts "   = #{num_of_bags}"
 
       in_this_bag += num_of_bags
-      puts "Current count is #{in_this_bag}"
+      puts ">>> Current count is #{in_this_bag}"
     end
   end
 
-  $bag_hash[colour.to_sym] = in_this_bag
-  return in_this_bag
+  bag_value(colour, in_this_bag)
 end
 
+def bag_value(colour, data = nil)
+  how_many_hash(colour) if data.nil? && $bag_hash.empty?
+  colour = colour.to_sym
+  if data && data > 0
+    $bag_hash[colour] = data unless $bag_hash[colour]
+  end
+  $bag_hash[colour]
+end
 
-  colour = YOUR_BAG
-  how_many_hash(F, colour)
-  puts how_many_bags(colour)
+puts bag_value(YOUR_BAG)
 puts $bag_hash.inspect
+puts $rec
