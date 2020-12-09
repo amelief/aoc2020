@@ -20,10 +20,8 @@ end
 
 # Part 1
 def get_target_num
-  (PREAMBLE + 1).upto(F.size - 1) do |i|
-    return F[i] unless valid_number?(i)
-  end
-  return nil
+  (PREAMBLE + 1).upto(F.size - 1) { |i| return F[i] unless valid_number?(i) }
+  nil
 end
 
 def contiguous_makes_target?(position)
