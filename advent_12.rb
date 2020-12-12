@@ -78,9 +78,7 @@ def move_ship
       rotate(num)
     else
       instruction = INSTRUCTIONS[direction.to_sym]
-    end
 
-    if instruction
       new_position = num * instruction.values[0]
 
       if $with_waypoint
