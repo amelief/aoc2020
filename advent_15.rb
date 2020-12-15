@@ -5,9 +5,8 @@ def calculate_next_number(finish)
   numbers = {}
 
   1.upto(finish) do |turn|
-    if turn % 1_000_000 == 0
-      puts "Turn: #{turn}"
-    end
+    puts "Turn: #{turn}" if turn % 1_000_000 == 0
+
     previous_number = current_number.clone
 
     if turn <= STARTING_NUMBERS.size
@@ -23,7 +22,7 @@ def calculate_next_number(finish)
       end
     end
 
-    numbers[current_number] ||= [];
+    numbers[current_number] ||= []
     numbers[current_number] << turn
 
     while(numbers[current_number].size > 2) do
