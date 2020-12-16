@@ -91,9 +91,9 @@ def part_2
   correct_combinations = 0
 
   # Make sure it's valid on our ticket too
-  valid_tickets.unshift(YOUR_TICKET)
+  valid_tickets << YOUR_TICKET
 
-  while correct_combinations < (valid_tickets.size - 5) do
+  while correct_combinations < (valid_tickets.size - 1) do
     correct_combinations = 0
     valid_tickets.each do |ticket|
       if valid_for_all_fields?(ticket, combination)
