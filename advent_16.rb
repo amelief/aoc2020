@@ -37,14 +37,6 @@ def valid_for_any_field?(num)
   false
 end
 
-def find_field_type(field)
-  fields = []
-  $validations.keys.each do |v|
-    fields << v if validate_rule()
-  end
-  fields
-end
-
 def valid_for_all_fields?(ticket, rules)
   fields = ticket.split(',').map(&:to_i)
   rules.each_with_index do |v, i|
@@ -74,6 +66,7 @@ end
 def find_valid_combination(ticket)
   # expensive, but works...!
   rules = $validations.keys.clone
+  rules.shuffle!
   rules.permutation.each do |combination|
     return combination if valid_for_all_fields?(ticket, combination)
   end
